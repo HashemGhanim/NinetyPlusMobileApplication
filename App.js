@@ -1,12 +1,10 @@
-import WelcomePage from "./screens/WelcomePage";
-import { useFonts } from "expo-font";
 import Home from "./screens/Home";
 import LoginPage from "./screens/LoginPage";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import CustomNavigationBar from "./components/CustomNavigationBar";
-import Chat from "./screens/Chat";
+import Chats from "./screens/Chats";
 import Notifications from "./screens/Notifications";
 
 const Stack = createNativeStackNavigator();
@@ -29,7 +27,7 @@ export default function App() {
       >
         <Stack.Screen name="login" component={LoginPage} />
         <Stack.Screen name="home" component={Home} />
-        <Stack.Screen name="chat" component={Chat} />
+        <Stack.Screen name="chat" component={Chats} />
         <Stack.Screen name="notifications" component={Notifications} />
       </Stack.Navigator>
 
