@@ -9,6 +9,7 @@ const truncateText = (text) => {
 };
 
 
+
 export  {
-    truncateText
+    truncateText,
 };

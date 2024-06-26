@@ -15,6 +15,9 @@ import colors from "../constants/Colors";
 import filter from "lodash.filter";
 import {useEffect, useState} from "react";
 import ChatItem from "../components/ChatItem";
+import {useNavigation} from "@react-navigation/native";
+import {useDispatch, useSelector} from "react-redux";
+import {hideBar} from "../store/slices/NavigationBarSlice";
 
 const EmptyInbox = ({isIndicator}) => {
     return (
@@ -41,16 +44,17 @@ export default function Chats() {
     const [searchQuery, setSearchQuery] = useState("");
     const [isEmpty, setIsEmpty] = useState(false);
 
+    const navigation = useNavigation();
 
     useEffect(() => {
         const listOfData = [
             {
                 "id": "6671c5453dbccf4888b27e76",
                 "image": "https://randomuser.me/api/portraits/men/1.jpg",
-                "name": "هاشم زرعي",
+                "name": "سلمان زرعي",
                 "unread": 0,
                 "time": "06:02 AM",
-                "lastMessage": "مرحباً، كيف حالك؟ انا هاشم زرعي طالب هندسة حاسوب في جامعة خضوري طولكرم احب البرمجو كثيرا"
+                "lastMessage": "مرحباً، كيف حالك؟ انا سلمان زرعي طالب هندسة حاسوب في جامعة خضوري طولكرم احب البرمجو كثيرا"
             },
             {
                 "id": "6671c545767fa879ea2682b8",
@@ -136,6 +140,8 @@ export default function Chats() {
         return name.includes(query);
     };
 
+    const dispatch = useDispatch();
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView className="flex justify-center items-center mt-4">
@@ -148,6 +154,10 @@ export default function Chats() {
                         <TouchableOpacity
                             className="w-[34] h-[34] rounded-full flex justify-center items-center"
                             style={{backgroundColor: colors.primary}}
+                            onPress={() => {
+                                navigation.navigate("addContact");
+                                dispatch(hideBar());
+                            }}
                         >
                             <Icon name={"add"} size={17} color="white"/>
                         </TouchableOpacity>

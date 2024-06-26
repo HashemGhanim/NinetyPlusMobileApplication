@@ -1,37 +1,21 @@
-import Home from "./screens/Home";
-import LoginPage from "./screens/LoginPage";
+import {Provider} from "react-redux";
+import store from "./store/store";
+import MainNavigator from "./MainNavigator";
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-import CustomNavigationBar from "./components/CustomNavigationBar";
-import Chats from "./screens/Chats";
-import Notifications from "./screens/Notifications";
-
-const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // const [fontsLoaded, fontError] = useFonts({
-  //   SFProDisplayBold: require("./assets/fonts/SF-Pro-Display-Bold.otf"),
-  //   SFPro: require("./assets/fonts/SF-Pro.ttf"),
-  // });
+    // const [fontsLoaded, fontError] = useFonts({
+    //   SFProDisplayBold: require("./assets/fonts/SF-Pro-Display-Bold.otf"),
+    //   SFPro: require("./assets/fonts/SF-Pro.ttf"),
+    // });
 
-  // if (!fontsLoaded) {
-  //   return <WelcomePage />;
-  // }
+    // if (!fontsLoaded) {
+    //   return <WelcomePage />;
+    // }
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName="home"
-      >
-        <Stack.Screen name="login" component={LoginPage} />
-        <Stack.Screen name="home" component={Home} />
-        <Stack.Screen name="chat" component={Chats} />
-        <Stack.Screen name="notifications" component={Notifications} />
-      </Stack.Navigator>
-
-      {true && <CustomNavigationBar />}
-    </NavigationContainer>
-  );
+    return (
+        <Provider store={store}>
+            <MainNavigator/>
+        </Provider>
+    );
 }

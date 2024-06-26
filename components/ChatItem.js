@@ -1,10 +1,13 @@
 import {Image, Text, TouchableOpacity, View, StyleSheet} from "react-native";
 import colors from "../constants/Colors";
 import {truncateText} from ".././utils/functions";
+import {useNavigation} from "@react-navigation/native";
 
 export default function ChatItem({item}) {
+    const navigation = useNavigation();
+
     return (
-        <TouchableOpacity className="w-full relative py-10 ">
+        <TouchableOpacity className="w-full relative py-10 " onPress={()=> navigation.navigate("chat", {avatar:item.image , receiverName:item.name, receiverId:item.id, userId:202011016})}>
             <Image
                 source={{
                     uri: item.image,

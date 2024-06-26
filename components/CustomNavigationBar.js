@@ -3,10 +3,9 @@ import colors from "../constants/Colors";
 import HomeSvg from "../svgs/HomeSvg";
 import ChatSvg from "../svgs/ChatSvg";
 import NotificationSvg from "../svgs/NotificationSvg";
-import SettingsSvg from "../svgs/SettingsSvg";
-
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { useCallback, useState } from "react";
+import { useCallback, useState, memo } from "react";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -17,11 +16,9 @@ import { DEFAULT_HIGH, DEFAULT_NAVIGATION_BAR_BOTTOM } from "@env";
 
 const screenDimensions = Dimensions.get("screen");
 
-export default function CustomNavigationBar() {
+function CustomNavigationBar() {
   const [navigationTabsLayout, setNavigationTabsLayout] = useState({});
   const [layoutInitialized, setLayoutInitialized] = useState(false);
-
-  const marginOfPoint = useSharedValue(49);
 
   const nav = useNavigation();
 
@@ -56,6 +53,12 @@ export default function CustomNavigationBar() {
     }
   };
 
+  const calculateMargin = (name) => {
+    return navigationTabsLayout[name].x + navigationTabsLayout[name].width / 2 - 2.5;
+  }
+
+  const marginOfPoint = useSharedValue(49);
+
   const animatedStyles = useAnimatedStyle(() => ({
     marginLeft: withTiming(marginOfPoint.value, {
       duration: 500,
@@ -64,8 +67,7 @@ export default function CustomNavigationBar() {
 
   const handlePress = (name) => {
     nav.navigate(name);
-    marginOfPoint.value =
-      navigationTabsLayout[name].x + navigationTabsLayout[name].width / 2 - 2.5;
+    marginOfPoint.value = calculateMargin(name);
   };
 
   return (
@@ -90,8 +92,8 @@ export default function CustomNavigationBar() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handlePress("chat")}
-            onLayout={(event) => onLayoutEachButton(event, "chat")}
+            onPress={() => handlePress("chats")}
+            onLayout={(event) => onLayoutEachButton(event, "chats")}
           >
             <ChatSvg />
           </TouchableOpacity>
@@ -104,10 +106,10 @@ export default function CustomNavigationBar() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => handlePress("settings")}
-            onLayout={(event) => onLayoutEachButton(event, "settings")}
+            onPress={() => handlePress("menu")}
+            onLayout={(event) => onLayoutEachButton(event, "menu")}
           >
-            <SettingsSvg />
+            <Ionicons name={"menu"} size={24} color="white" />
           </TouchableOpacity>
         </View>
         <View className="w-full">
@@ -120,3 +122,5 @@ export default function CustomNavigationBar() {
     </View>
   );
 }
+
+export default memo(CustomNavigationBar);
