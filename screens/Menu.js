@@ -8,6 +8,9 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { removeItemFromAsyncStorage } from '../utils/functions';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../store/slices/userSlice';
+import { hideBar } from '../store/slices/NavigationBarSlice';
 
 
 const screenDimensions = Dimensions.get("screen");
@@ -15,41 +18,45 @@ const screenDimensions = Dimensions.get("screen");
 function Menu() {
     const [windowWidth, setWindowWidth] = useState(screenDimensions.width);
     const [left, setLeft] = useState(-(windowWidth * 1.5/2) + screenDimensions.width/2);
-
+    const dispatch = useDispatch();
+    const navigator = useNavigation()
+    const {user} = useSelector(state => state.user);
+    console.log(user && user);
     useEffect(() => {
         setWindowWidth(screenDimensions.width);
         setLeft(-(windowWidth * 1.5/2) + screenDimensions.width/2);
     }, []);
 
-    const navigator = useNavigation()
+    
     const onLogoutHandler = async () => {
-        await removeItemFromAsyncStorage('user');
+        await removeItemFromAsyncStorage('user');   
         navigator.navigate('login')
+        dispatch(hideBar());
     }
+
+
     return (
     <SafeAreaView className="h-full w-full">
                 <View className={`rounded-full absolute  left-0 flex justify-end items-center z-10`}
                       style={{width:windowWidth*1.5, height:windowWidth*1.5, top:-windowWidth*1.8/2, left:left, backgroundColor:colors.primary}}>
                     <View>
-                        <Image source={{
-                            uri:"https://media.licdn.com/dms/image/D4E03AQHXpMesk-qWiw/profile-displayphoto-shrink_800_800/0/1695671662512?e=1724889600&v=beta&t=8Gbd3GkrCUkEll-RwODZaTKW0vkdmR-zSpEoHFSEl-o"
+                        {user && <Image source={{
+                            uri:`${user.user.profile_image}`
                         }}
                                className="rounded-full w-40 h-40 top-16 border-[6px] border-[#fff]"
-                        />
+                        />}
                     </View>
                 </View>
                 <ScrollView className={"mt-[270px] mb-[70px]"}>
                     <View className={` mx-auto w-full`}>
                         <View className={`mx-auto`}>
-                            <Text className={"font-semibold text-xl"}>Hashem Zerei</Text>
+                            <Text className={"font-semibold text-xl"}>{user && user.user.first_name} {user && user.user.last_name}</Text>
                         </View>
                         <View className={"mt-[10px] w-full flex-row justify-center"}>
-                            <View className={`h-[30px] px-8 mx-0.5 rounded-full bg-[${colors.primary}] flex items-center justify-center`}>
-                                <Text className={"font-medium text-black"}>أستاذ</Text>
+                            <View className={`h-[30px] px-8 mx-0.5 rounded-full bg-[#edd264] flex items-center justify-center`}>
+                                <Text className={"font-large text-black"}>أستاذ</Text>
                             </View>
-                            <View className={`h-[30px] px-8 mx-0.5 rounded-full bg-[${colors.primary}] flex items-center justify-center`}>
-                                <Text className={"font-medium text-black"}>برمجة</Text>
-                            </View>
+                            
                         </View>
                     </View>
                     <View className={"w-[95%] mt-5 mx-auto bg-white rounded-[8px]"}>
@@ -63,7 +70,7 @@ function Menu() {
                         </View>
                         <View className={"w-full flex-row justify-center items-center my-4"}>
                             <View className={"w-[90%] flex items-end "}>
-                                <Text>hashemzerei45@gmail.com</Text>
+                                <Text>{user.user.email}</Text>
                             </View>
                             <View className={"w-[10%] flex justify-center items-center"}>
                                 <MaterialCommunityIcons name={"email-outline"} size={18} />
@@ -71,7 +78,7 @@ function Menu() {
                         </View>
                         <View className={"w-full flex-row justify-center items-center my-4"}>
                             <View className={"w-[90%] flex items-end "}>
-                                <Text>0569922586</Text>
+                                <Text>{user.user.phone}</Text>
                             </View>
                             <View className={"w-[10%] flex justify-center items-center"}>
                                 <FontAwesome name={"mobile"} size={18} />

@@ -1,11 +1,26 @@
 import { NINETY_PLUS_CENTRAL } from "../utils/functions";
 
 const login = async (email, password) => {
-        
-            const response = await NINETY_PLUS_CENTRAL.post('/auth/login', {email, password});
-        return response.data.data
-        
-   
-}
+  try{
+    const response = await NINETY_PLUS_CENTRAL.post("/auth/login", {
+      email,
+      password,
+    });
+    return response.data.data;
+  }
+  catch(e){
+    console.log(e);
+  }
+};
 
-export default {login}
+const logout = async (token) => {
+  const response = await NINETY_PLUS_CENTRAL.post("/auth/logout",{}, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
+  console.log(response.status);
+  return response.status;
+};
+
+export default { login, logout };

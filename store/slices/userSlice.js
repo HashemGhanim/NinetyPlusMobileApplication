@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import userService from "../../service/userService";
-import { setItemToAsyncStorage } from "../../utils/functions";
+import { logg, removeItemFromAsyncStorage, setItemToAsyncStorage } from "../../utils/functions";
 
 export const login = createAsyncThunk('user/login', async(data, thunkApi) => {
     try{
@@ -9,13 +9,32 @@ export const login = createAsyncThunk('user/login', async(data, thunkApi) => {
         return t
     }
     catch(e) {
-        return thunkApi.rejectWithValue(e.response.data.message);
+        const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+        return thunkApi.rejectWithValue(message);
+    }
+})
+
+export const logout = createAsyncThunk('user/logout', async(data, thunkApi) => {
+    try{
+        const t =  await userService.logout(thunkApi.getState().user.user.access_token);
+        
+        return t;
+    }
+    catch(e) {
+        const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+        return thunkApi.rejectWithValue(message);
     }
 })
 
 
 
-export const NavigationBarSlice = createSlice({
+export const userSlice = createSlice({
     name: "user",
     initialState: {
         user: null,
@@ -27,29 +46,60 @@ export const NavigationBarSlice = createSlice({
     reducers:{
        setUser: (state, action) => {
         state.user = action.payload;
+       },
+       reset: (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = false;
+        state.errorMessage = '';
        }
     },
     extraReducers: (builder) => {
+
+        // pending
         builder.addCase(login.pending, (state, action) => {
             state.isLoading = true;
-            console.log('log in is loading')
+            logg('userSlice', 'log in is loading', '');
         })
+        .addCase(logout.pending, (state, action) => {
+           // state.isLoading = true;
+            logg('userSlice', 'log out is loading', '');
+        })
+
+        //fullfielled
         .addCase(login.fulfilled, (state, action) => {
             state.user = action.payload;
             state.isLoading = false;
             state.isSuccess = true;
-            console.log('log in success', action.payload)
+            logg('userSlice', 'log in is success -> ' + action.payload, 'action.payload');
         })
+        .addCase(logout.fulfilled, (state, action) => {
+            state.user = null;
+            state.isLoading = false;
+            state.isSuccess = true;
+            logg('userSlice', 'logout is success', '');
+        })
+
+        //rejected
         .addCase(login.rejected, (state, action) => {
             
             if(action.payload === 'messages.error.login')
             state.errorMessage = 'check your password and email';
-            console.log('log in error', state.errorMessage)
+
+            logg('userSlice', 'log in is error -> ' + state.errorMessage, 'state.errorMessage');
+
+            state.isLoading = false;
             state.isError = true;
+        })
+        .addCase(logout.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.errorMessage = 'something went wrong'
+            logg('userSlice', 'log in is error -> ' + action.payload, 'state.errorMessage');
         })
     }
 })
 
-export const {setUser} = NavigationBarSlice.actions;
+export const {setUser, reset} = userSlice.actions;
 
-export default NavigationBarSlice.reducer;
+export default userSlice.reducer;

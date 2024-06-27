@@ -3,12 +3,14 @@ import CustomCalendar from "../components/CustomCalendar";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import colors from "../constants/Colors";
 import CoursesContainer from "../components/CoursesContainer";
+import { useSelector } from "react-redux";
 
 const UpperPartHome = () => {
+  const userState = useSelector(state => state.user);
   return (
     <View className="flex-row mx-5 mt-4 justify-between items-center mb-4">
       <View>
-        <Text className="font-bold text-[20px] pb-1">Hello Hashem,</Text>
+        <Text className="font-bold text-[20px] pb-1">{userState.user && userState.user.user.first_name} {userState.user && userState.user.user.last_name},</Text>
         <Text className="font-normal text-[13px]">
           Look at your daily schedule
         </Text>
@@ -18,7 +20,7 @@ const UpperPartHome = () => {
         className="w-[45] h-[45] rounded-full flex justify-center items-center"
         style={{ backgroundColor: colors.primary }}
       >
-        <Text className="font-semibold text-white">H</Text>
+        <Text className="font-semibold text-white">{userState.user && userState.user.user.first_name.charAt(0).toUpperCase}</Text>
       </View>
     </View>
   );

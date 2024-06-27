@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import chatService from "../../service/chatService";
+import { isLoaded } from "expo-font";
+import notificationService from "../../service/notificationService";
 
-export const getAllChats = createAsyncThunk(
-  "chats/getAllChats",
+export const getAllNotifications = createAsyncThunk(
+  "notification/getAllNotifications",
   async (data, thunkApi) => {
     try {
-      return await chatService.getAllChats(
+      return await notificationService.getAllNotifications(
         thunkApi.getState().user.user.user.user_id,
         thunkApi.getState().user.user.access_token
       );
@@ -20,10 +21,11 @@ export const getAllChats = createAsyncThunk(
     }
   }
 );
-export const chatSlice = createSlice({
-  name: "chats",
+
+export const notificationSlice = createSlice({
+  name: "notification",
   initialState: {
-    chats: null,
+    notifications: [],
     isLoading: false,
     isError: false,
     isSuccess: false,
@@ -32,16 +34,17 @@ export const chatSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllChats.pending, (state, action) => {
+      .addCase(getAllNotifications.pending, (state, action) => {
         state.isLoading = true;
       })
-      .addCase(getAllChats.fulfilled, (state, action) => {
-        state.isLoading = false;
+      .addCase(getAllNotifications.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.isSuccess = true;
-        state.chats = action.payload;
-        console.log(action.payload)
+        state.isLoading = false;
+        state.notifications = action.payload;
       })
-      .addCase(getAllChats.rejected, (state, action) => {
+      .addCase(getAllNotifications.rejected, (state, action) => {
+        console.log(action.payload);
         state.isLoading = false;
         state.isError = true;
         state.errorMessage = action.payload;
@@ -49,5 +52,6 @@ export const chatSlice = createSlice({
   },
 });
 
-export const {} = chatSlice.actions;
-export default chatSlice.reducer;
+export const {} = notificationSlice.actions;
+
+export default notificationSlice.reducer;
