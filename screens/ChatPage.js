@@ -52,7 +52,18 @@ function ChatPage({route}) {
     }, []);
 
     useEffect(() => {
-        setMessages([]);
+        setMessages([
+            {
+              _id: 1,
+              text: 'Hello developer',
+              createdAt: new Date(),
+              user: {
+                _id: 2,
+                name: 'React Native',
+                avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
+              },
+            },
+          ])
     }, [])
 
     const actionSheetRef = useRef();

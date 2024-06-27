@@ -22,6 +22,7 @@ function CustomButton({
         onPress={handlePress}
         activeOpacity={0.7}
         className={`${containerStyles} ${isLoading ? "opacity-50" : ""}`}
+        onPres
       >
         {additionalComponent}
         <Text className={`${textStyles}`}>{title}</Text>

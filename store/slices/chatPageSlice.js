@@ -6,12 +6,10 @@ export const NavigationBarSlice = createSlice({
         displayNavigationBar:false
     },
     reducers:{
-        hideBar: (state) => {
-            state.displayNavigationBar = false
-        },
-        displayBar: (state) => {
-            state.displayNavigationBar = true
-        }
+       
+    },
+    extraReducers : (builder) => {
+        return builder.addCase();
     }
 })
 

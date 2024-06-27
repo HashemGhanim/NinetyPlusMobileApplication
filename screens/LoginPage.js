@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 import headerLogoImage from "../assets/images/logoInLoginPage.png";
 
@@ -19,6 +20,11 @@ import GoogleSvg from "../svgs/GoogleSvg";
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
 import colors from "../constants/Colors";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../store/slices/userSlice";
+import { useNavigation } from "@react-navigation/native";
+import { displayBar } from "../store/slices/NavigationBarSlice";
 
 function PreviewTextInLoginPage() {
   return (
@@ -48,8 +54,31 @@ function PreviewTextInLoginPage() {
   );
 }
 
+
 export default function LoginPage() {
+  const dispatch = useDispatch()
+  const [loginData, setLoginData] = useState({email: '', password: ''});
+const onLoginDataChange = (name, data) => {
+  console.log(name, data)
+  setLoginData((prev) => ({ ...prev, [name]: data }));
+} 
+
+const onLoginHandler = () => {
+  dispatch(login(loginData));
+  console.log(loginData)
+}
+
+const {user} = useSelector(state => state.user)
+const navigate = useNavigation();
+if(user)
+  {
+    navigate.navigate('home');
+    dispatch(displayBar())
+  }
   return (
+    <KeyboardAvoidingView
+    behavior="padding"
+  >
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -73,7 +102,7 @@ export default function LoginPage() {
 
           <View className="w-[90%] mx-4 mt-8 flex">
             <CustomInput
-              label={"Email"}
+              label={"email"}
               labelStyles={"pl-[5px] font-bold text-[15px]"}
               labelEntering={FadeInDown.delay(50).duration(1000).springify()}
               containerStyles={"bg-black/5 p-[5%] rounded-2xl w-full mt-2"}
@@ -81,10 +110,11 @@ export default function LoginPage() {
               placeHolder={"example@gmail.com"}
               placeHolderTextColor={"gray"}
               secureTextEntry={false}
+              onDataChange={onLoginDataChange}
             />
 
             <CustomInput
-              label={"Password"}
+              label={"password"}
               labelStyles={"pl-[5px] font-bold text-[15px] mt-5"}
               labelEntering={FadeInDown.delay(200).duration(1000).springify()}
               containerStyles={"bg-black/5 p-[5%] rounded-2xl w-full mt-2"}
@@ -92,6 +122,7 @@ export default function LoginPage() {
               placeHolder={"*********"}
               placeHolderTextColor={"gray"}
               secureTextEntry={true}
+              onDataChange={onLoginDataChange}
             />
 
             <CustomButton
@@ -102,6 +133,7 @@ export default function LoginPage() {
               viewStyles={"p-[5%] rounded-2xl w-full mt-10"}
               backgroundColor={colors.primary}
               entering={FadeInDown.delay(300).duration(1000).springify()}
+              handlePress={onLoginHandler}
             />
 
             <Animated.View
@@ -133,5 +165,6 @@ export default function LoginPage() {
         </View>
       </ScrollView>
     </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }

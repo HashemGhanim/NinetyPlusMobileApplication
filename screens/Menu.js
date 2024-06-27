@@ -6,6 +6,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { removeItemFromAsyncStorage } from '../utils/functions';
+import { useNavigation } from '@react-navigation/native';
 
 
 const screenDimensions = Dimensions.get("screen");
@@ -18,6 +20,12 @@ function Menu() {
         setWindowWidth(screenDimensions.width);
         setLeft(-(windowWidth * 1.5/2) + screenDimensions.width/2);
     }, []);
+
+    const navigator = useNavigation()
+    const onLogoutHandler = async () => {
+        await removeItemFromAsyncStorage('user');
+        navigator.navigate('login')
+    }
     return (
     <SafeAreaView className="h-full w-full">
                 <View className={`rounded-full absolute  left-0 flex justify-end items-center z-10`}
@@ -98,7 +106,7 @@ function Menu() {
                         </Text>
                         <AntDesign name={"setting"} size={30} color={"white"} />
                     </TouchableOpacity>
-                    <TouchableOpacity className={"w-[95%] mt-5 mx-auto rounded-[8px] flex-row justify-center items-center bg-red-500"}>
+                    <TouchableOpacity onPress={onLogoutHandler} className={"w-[95%] mt-5 mx-auto rounded-[8px] flex-row justify-center items-center bg-red-500"}>
                         <Text className={"font-medium p-3 text-white text-base"}>
                             تسجيل الخروج
                         </Text>

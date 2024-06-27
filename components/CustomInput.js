@@ -10,6 +10,7 @@ export default function CustomInput({
   placeHolder,
   placeHolderTextColor,
   secureTextEntry,
+  onDataChange
 }) {
   return (
     <>
@@ -21,6 +22,7 @@ export default function CustomInput({
           placeholder={placeHolder}
           placeholderTextColor={placeHolderTextColor}
           secureTextEntry={secureTextEntry}
+          onChangeText={(text) => onDataChange(label, text)}
         />
       </Animated.View>
     </>

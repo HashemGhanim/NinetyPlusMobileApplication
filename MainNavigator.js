@@ -7,22 +7,29 @@ import Notifications from "./screens/Notifications";
 import AddContact from "./screens/AddContact";
 import CustomNavigationBar from "./components/CustomNavigationBar";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import ChatPage from "./screens/ChatPage";
 import Menu from "./screens/Menu";
+import { getItemFromAsyncStorage } from './utils/functions';
+import { setUser } from './store/slices/userSlice';
 
 const Stack = createNativeStackNavigator();
 
 export default function MainNavigator() {
 
+    const dispatch = useDispatch();
     const isBarDisplayed = useSelector((state)=> state.navigationBar.displayNavigationBar);
-
+    const checkUser = async() => {
+        const user = await getItemFromAsyncStorage('user');
+        dispatch(setUser(user))
+    }
+    checkUser()
     return (
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{headerShown: false}}
-                initialRouteName="home">
-                <Stack.Screen name="login" component={LoginPage}/>
+                initialRouteName="login">
+                <Stack.Screen name="login" component={LoginPage} />
                 <Stack.Screen name="home" component={Home}/>
                 <Stack.Screen name="chats" component={Chats}/>
                 <Stack.Screen name="notifications" component={Notifications}/>
